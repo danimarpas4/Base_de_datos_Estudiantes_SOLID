@@ -1,4 +1,5 @@
 # SOLID Principles: Student Management System
+![Python CI Pipeline](https://github.com/danimarpas4/Base_de_datos_Estudiantes_SOLID/actions/workflows/ci.yml/badge.svg)
 
 > A modular Python architecture demonstrating robust software design patterns applied to a database-driven application.
 
