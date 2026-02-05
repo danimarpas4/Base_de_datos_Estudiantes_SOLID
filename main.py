@@ -33,7 +33,7 @@ db_adapter.guardar(estudiante_2)
 db_adapter.guardar(estudiante_3)
 
 # List los studients
-estudiantes = repositorio.listar_estudiantes()
+estudiantes = repository.listar_estudiantes()
 for estudiante in estudiantes:
     print(f"ID: {estudiante.id} , Nombre:{estudiante.nombre}, Grado:{estudiante.grado}")
 
