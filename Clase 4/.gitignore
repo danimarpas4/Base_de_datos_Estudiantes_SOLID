@@ -1,0 +1,20 @@
+# --- Security & Environment ---
+# Never push keys. Not your wallet seed, not your DB password.
+.env
+.env.local
+
+# --- Python Internals ---
+# We don't need compiled bytecode taking up space.
+__pycache__/
+*.py[cod]
+
+# --- Local Data ---
+# The database state is local to your node (machine).
+*.db
+*.sqlite3
+
+# --- IDE Config ---
+# Keep your dev environment settings private.
+.vscode/
+.idea/
+*:Zone.Identifier

@@ -1,16 +1,15 @@
-# PRINCIPIO DE INVERSION DE DEPENDENCIA
-# Las clases deben depender de abstracciones y no de implementaciones concretas
+# SOLID: Dependency Inversion Principle (DIP)
+# Core Concept: High-level modules should not depend on low-level modules. Both should depend on abstractions.
 
-# ABSTRACCION DE BASE DE DATOS PARA UNA IMPLEMENTACION INDISTINTA
-
-
-# Abstraccion para guardar datos
+# --- ABSTRACTION LAYER ---
+# Defines the standard for ANY database implementation (SQL, NoSQL, File, etc.)
 class BaseDeDatos:
     def guardar(self, data):
         raise NotImplementedError
 
-
-# Implementacion concreta de BD CON SQLALCHEMY
+# --- LOW-LEVEL IMPLEMENTATION (ADAPTER) ---
+# Concrete implementation using SQLAlchemy.
+# This details can change without breaking the high-level logic.
 class SQLAlchemyDB(BaseDeDatos):
     def __init__(self, session):
         self.session = session

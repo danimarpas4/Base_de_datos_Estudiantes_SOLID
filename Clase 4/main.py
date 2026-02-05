@@ -1,46 +1,44 @@
-# 1. Importamos engine y Base
+# 1. Initialize Infrastructure (Engine & Session)
 from setup import Session, engine, Base 
 
-# 2. Al importar esto, Python "aprende" que existe una tabla llamada 'estudiantes'
+# 2. Import Logic Modules
+# The ORM needs to register the 'Estudiante' class metadata before initialization
 from SingleResponsibilityPrinciple import Estudiante, EstudiantesBD
 from OpenClosedPrinciple import BecaPorNecesidad, BecaPorRendimiento
 from LiskovSubstitutionPrinciple import NotificacionEmail, NotificacionSMS
 from InterfaceSegregationPrinciple import ReporteEsudiante, ExportadorReporte
 from DependencyInversionPrinciple import SQLAlchemyDB
 
-# --- AGREGA ESTO AQUÍ OBLIGATORIAMENTE ---
-# Ahora que Python ya leyó las líneas de arriba y sabe qué es "Estudiante",
-# le ordenamos crear la tabla en la base de datos.
-print("Creando tablas en SQLite...")  # Un print para que veas que pasa por aquí
+# --- MIGRATION SCRIPT ---
+# Executing DDL to provision the schema in the local node (SQLite)
+print("Initializing database schema...") 
 Base.metadata.create_all(engine)
-# -----------------------------------------
+# ------------------------
 
-# Crear la sesion de base de datos...
+# Start a new transaction session
 session = Session()
-# ... resto del código ...
 
-# Crear la sesion de base de datos -> DIV
-session = Session()
-db = SQLAlchemyDB(session)
-repositorio = EstudiantesBD(session)
+# Dependency Injection for Database Operations
+db_adapter = SQLAlchemyDB(session)
+repository = EstudiantesBD(session)
 
-
-# Agregar estudiantes -> SRP
+# SRP Implementation: Adding records
 estudiante_1 = Estudiante(nombre="Ana Martinez", grado="A")
 estudiante_2 = Estudiante(nombre="Sergio Machado", grado="B")
 estudiante_3 = Estudiante(nombre="Juan Garcia", grado="C")
 
-db.guardar(estudiante_1)
-db.guardar(estudiante_2)
-db.guardar(estudiante_3)
+# Committing transactions
+db_adapter.guardar(estudiante_1)
+db_adapter.guardar(estudiante_2)
+db_adapter.guardar(estudiante_3)
 
-# Listar los estudiantes
+# List los studients
 estudiantes = repositorio.listar_estudiantes()
 for estudiante in estudiantes:
     print(f"ID: {estudiante.id} , Nombre:{estudiante.nombre}, Grado:{estudiante.grado}")
 
 
-# Calcular becas -> ocp
+# Calculate scholarships -> ocp
 calculadora_rendimiento = BecaPorRendimiento()
 claculadora_necesidad = BecaPorNecesidad()
 
@@ -52,7 +50,7 @@ for estudiante in estudiantes:
         f"{estudiante.nombre} - Beca por necesidad: {claculadora_necesidad.calcular(estudiante)}"
     )
 
-# Enviar notificaciones -> LSP
+# Send notifications -> LSP
 notificacion_email = NotificacionEmail()
 notificacion_sms = NotificacionSMS()
 for estudiante in estudiantes:
@@ -60,7 +58,7 @@ for estudiante in estudiantes:
     notificacion_email.enviar(estudiante, mensaje)
     notificacion_sms.enviar(estudiante, mensaje)
 
-# Generar y exportar los reportes -> ISP
+# Generate and export the reports -> ISP
 reporte_generador = ReporteEsudiante()
 exportador_reportes = ExportadorReporte()
 
